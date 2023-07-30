@@ -4,6 +4,8 @@ const app = express();
 const PORT = process.env.PORT || 3333;
 
 //import routes
+const user_route = require('./routes/user_route');
+const thought_route = require('./routes/thought_route');
 
 const db = require('./db/connections')
 
@@ -11,7 +13,7 @@ const db = require('./db/connections')
 app.use(express.json());
 
 //routes
-app.use()
+app.use('/api', [user_route, thought_route])
 
 db.once('open', () => {
     app.listen(PORT, () =>
