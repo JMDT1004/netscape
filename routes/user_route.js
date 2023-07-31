@@ -1,15 +1,18 @@
 const router = require('express').Router();
-const { User } = require('../models/User');
+const { User } = require('../models');
 
 //get all users
-router.get('/user', async (req, res) => {
-    const user = await User.find({});
-    res.json(user)
+router.get('/users', async (req, res) => {
+    try {
+        const user = await User.find([])
+        res.json(user)
+    } catch (err) {
+        res.status(500).json({ err: 'Unable to fetch users' })
+    }
 })
 
-
 //get a single user by id and populate thought and friend data
-router.get('/user/:id', async (req, res) => {
+router.get('/users/:id', async (req, res) => {
     const userId = req.params.id
     const user = await User.findById(userId)
         .populate('thoughts')
@@ -23,16 +26,14 @@ router.get('/user/:id', async (req, res) => {
     }
 })
 
-
 //post a new user
-router.post('/user', async (req, res) => {
+router.post('/users', async (req, res) => {
     const user = await User.create(req.body)
     res.json(user)
 })
 
-
 //update a user by id
-router.put('/user/:id', async (req, res) => {
+router.put('/users/:id', async (req, res) => {
     const userId = req.params.id
     const updateUserData = req.body
     const updateUser = await User.findByIdAndUpdate(userId, updateUserData, {
@@ -43,11 +44,11 @@ router.put('/user/:id', async (req, res) => {
             message: 'unable to update user'
         })
     }
+    res.json(updateUser);
 })
 
-
 //delete user by id
-router.delete('/user/:id', async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
     const userId = req.params.id
     const deleteUser = await User.findByIdAndDelete(userId);
     if (!deleteUser) {
@@ -60,11 +61,10 @@ router.delete('/user/:id', async (req, res) => {
     })
 })
 
-
 //add a new friend to users friend list
-router.post('/user/:id/friends/:feindId', async (req, res) => {
-    const { userId, friendId } = req.params
-    const user = await User.findById(userId)
+router.post('/users/:id/friends/:friendId', async (req, res) => {
+    const { id, friendId } = req.params;
+    const user = await User.findById(id)
     if (user) {
         user.friends.push(friendId);
         await user.save();
@@ -76,11 +76,10 @@ router.post('/user/:id/friends/:feindId', async (req, res) => {
     }
 })
 
-
 //remove a friend from users friend list
-router.delete('/user/:userId/friends/:friendId', async (req, res) => {
-    const { userId, friendId } = req.params;
-    const user = await User.findById(userId);
+router.delete('/users/:id/friends/:friendId', async (req, res) => {
+    const { id, friendId } = req.params;
+    const user = await User.findById(id);
     if (user) {
         user.friends = user.friends.filter(id => id.toString() !== friendId);
         await user.save();

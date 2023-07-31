@@ -1,15 +1,18 @@
 const router = require('express').Router();
-const { Thought } = require('../models/Thought');
+const { Thought } = require('../models');
 
 //get all thoughts
-router.get('/thought', async (req, res) => {
-    const thought = await Thought.find({});
-    res.json(thought)
+router.get('/thoughts', async (req, res) => {
+    try {
+        const thought = await Thought.find([])
+        res.json(thought)
+    } catch (err) {
+        res.status(500).json({ err: 'Unable to fetch thoughts' })
+    }
 })
 
-
 //get a single thought by id
-router.get('/thought/:id', async (req, res) => {
+router.get('/thoughts/:id', async (req, res) => {
     const thoughtId = req.params.id
     const thought = await Thought.findById(thoughtId);
     return res.json(thought)
@@ -17,14 +20,14 @@ router.get('/thought/:id', async (req, res) => {
 
 
 //post a new thought
-router.post('/thought', async (req, res) => {
+router.post('/thoughts', async (req, res) => {
     const thought = await Thought.create(req.body)
     res.json(user)
 })
 
 
 //update a thought by id
-router.put('/thought/:id', async (req, res) => {
+router.put('/thoughts/:id', async (req, res) => {
     const thoughtId = req.params.id
     const updatedThoughtData = req.body
     const updateThought = await Thought.findByIdAndUpdate(
@@ -40,7 +43,7 @@ router.put('/thought/:id', async (req, res) => {
 
 
 //delete thought by id
-router.delete('/thought/:id', async (req, res) => {
+router.delete('/thoughts/:id', async (req, res) => {
     const thoughtId = req.params.id
     const deleteThought = await Thought.findByIdAndDelete(
         thoughtId);
@@ -56,7 +59,7 @@ router.delete('/thought/:id', async (req, res) => {
 
 
 //create a reaction stored in a single thoughts reaction array field
-router.post('/thought/:thoughtId/reactions', async (req, res) => {
+router.post('/thoughts/:thoughtId/reactions', async (req, res) => {
     const { thoughtId } = req.params;
     const reaction = req.body;
     const thought = await Thought.findById(thoughtId);
@@ -73,7 +76,7 @@ router.post('/thought/:thoughtId/reactions', async (req, res) => {
 
 
 //remove a reaction by the reactions reaction Id
-router.delete('/thought/:thoughtId/reactions/:reactionId', async (req, res) => {
+router.delete('/thoughts/:thoughtId/reactions/:reactionId', async (req, res) => {
     const { thoughtId, reactionId } = req.params;
     const thought = await Thought.findById(thoughtId);
     if (thought) {

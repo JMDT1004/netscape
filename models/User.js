@@ -18,14 +18,14 @@ const userSchema = new Schema({
             message: 'invalid email'
         }
     },
-    thoughts: {
-        type: [Types.ObjectId],
+    thoughts: [{
+        type: Types.ObjectId,
         ref: 'Thought'
-    },
-    friends: {
-        type: [Types.ObjectId],
+    }],
+    friends: [{
+        type: Types.ObjectId,
         ref: 'User'
-    }
+    }]
 });
 
 userSchema.virtual('friendCount').get(function () {
