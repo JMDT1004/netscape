@@ -5,7 +5,7 @@ const { Thought } = require('../models');
 router.get('/thoughts', async (req, res) => {
     try {
         const thought = await Thought.find([])
-        res.json(thought)
+        return res.json(thought)
     } catch (err) {
         res.status(500).json({ err: 'Unable to fetch thoughts' })
     }

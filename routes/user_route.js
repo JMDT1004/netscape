@@ -4,8 +4,8 @@ const { User } = require('../models');
 //get all users
 router.get('/users', async (req, res) => {
     try {
-        const user = await User.find([])
-        res.json(user)
+        const user = await User.find({})
+        return res.json(user)
     } catch (err) {
         res.status(500).json({ err: 'Unable to fetch users' })
     }
