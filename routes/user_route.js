@@ -4,7 +4,7 @@ const { User } = require('../models');
 //get all users
 router.get('/users', async (req, res) => {
     try {
-        const user = await User.find({})
+        const user = await User.find()
         return res.json(user)
     } catch (err) {
         res.status(500).json({ err: 'Unable to fetch users' })
@@ -26,7 +26,7 @@ router.get('/users/:id', async (req, res) => {
     }
 })
 
-//post a new user
+//create a new user
 router.post('/users', async (req, res) => {
     const user = await User.create(req.body)
     res.json(user)
